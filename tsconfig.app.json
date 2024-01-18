@@ -1,0 +1,20 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "example/src/**/*",
+    "example/src/**/*.vue",
+    "packages/**/*",
+    "packages/**/*.vue"
+  ],
+  "exclude": ["**/__tests__/*"],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "composite": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "example/*": ["./example/src/*"]
+    }
+  }
+}
