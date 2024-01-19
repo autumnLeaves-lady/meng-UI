@@ -1,11 +1,9 @@
-name: meng-ui-deploy
+name: meng-ui Actions Build and Deploy
 
 on:
   # 手动运行工作流程（workflow_dispatch 事件触发器配置后可以在actions下手动运行工作流）
   workflow_dispatch:
-  push:
-    branches:
-      - main
+
 jobs:
   # jobs的id
   build-add-deploy:
@@ -15,6 +13,8 @@ jobs:
       # 使用actions/checkout@v4 库拉取代码到ubuntu上
       - name: checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       # 安装pnpm
       - name: install pnpm
@@ -22,6 +22,27 @@ jobs:
         with:
           version: 8
 
+      # 设置node的版本
+      - name: Use Node.js
+        # 使用 actions/setup-node@v3 库安装 nodejs，with 提供了一个参数 node-version 表示要安装的nodejs 版本
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'pnpm'
+
       # 打包成静态文件
       - name: build
         run: pnpm install && pnpm build
+
+      # 部署到 GitHub Pages - 也就是将打包内容发布到 GitHub Pages
+      - name: deploy
+        # 使用别人写好的 actions 去部署 （将打包文件部署到指定分支上）
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        # 自定义环境变量
+        with:
+          # 指定仓库：你要发布的仓库路劲名
+          repository-name: autumnLeaves-lady/meng-UI
+          # 部署到 deploy-pages 分支，也就是部署后提交到哪个分支
+          branch: deploy-pages
+          # 填写打包好的目录名称路径
+          folder: ./docs/.vitepress/dist
