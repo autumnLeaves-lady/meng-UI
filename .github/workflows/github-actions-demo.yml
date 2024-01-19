@@ -32,7 +32,7 @@ jobs:
 
       # 打包成静态文件
       - name: build
-        run: pnpm install && pnpm build
+        run: pnpm install && pnpm build:docs
 
       # 部署到 GitHub Pages - 也就是将打包内容发布到 GitHub Pages
       - name: deploy
