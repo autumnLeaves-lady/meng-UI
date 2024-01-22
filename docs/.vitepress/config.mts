@@ -31,7 +31,7 @@ export default defineConfig({
   title: 'yyg-admin-ui',
   description: 'YYG Vue3企业级中后台组件库',
   lang: 'cn-ZH',
-  base: '/',
+  base: '/meng-UI/',
   lastUpdated: true,
   themeConfig: {
     logo: '/logo.png',
