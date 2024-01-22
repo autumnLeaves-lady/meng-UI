@@ -40,7 +40,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         # 自定义环境变量
         with:
-          token: ${{ secrets.ACCESS_TOKEN }}
           # 指定仓库：你要发布的仓库路劲名
           repository-name: autumnLeaves-lady/meng-UI
           # 部署到 deploy-pages 分支，也就是部署后提交到哪个分支
