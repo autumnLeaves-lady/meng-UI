@@ -1,24 +1,22 @@
-# Sample workflow for building and deploying a VitePress site to GitHub Pages
+# 构建和部署一个VitePress网站到GitHub页面的工作流
 #
 name: Deploy meng-UI site to Pages
 
 on:
-  # Runs on pushes targeting the `main` branch. Change this to `master` if you're
-  # using the `master` branch as the default branch.
+  # 运行针对“主”分支的推送。如果你使用master分支作为默认分支，就把它改为master
   push:
     branches: [main]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # 允许您从“操作”选项卡手动运行此工作流
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# 设置GITHUB_TOKEN的权限，允许部署到GitHub页面
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# 只允许一个并发部署，跳过正在运行和最新队列之间的运行队列。但是，不要取消正在进行的运行，因为我们希望允许这些生产部署完成。
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -26,43 +24,42 @@ concurrency:
 jobs:
   # Build job
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    runs-on: ubuntu-latest # 指定了这个工作将在最新的Ubuntu环境上运行。
+    steps: # 步骤列表
+      - name: Checkout # 给这一步命名为"Checkout"
+        uses: actions/checkout@v3 # 使用actions/checkout@v3以检出代码到工作目录
         with:
-          fetch-depth: 0 # Not needed if lastUpdated is not enabled
-      # - uses: pnpm/action-setup@v2 # Uncomment this if you're using pnpm
-      # - uses: oven-sh/setup-bun@v1 # Uncomment this if you're using Bun
-      - name: Setup Node
-        uses: actions/setup-node@v3
+          fetch-depth: 0 # 指定了检出代码时不需要历史记录，这对于不启用lastUpdated时不是必需的。
+      - name: Setup Node # 给这一步命名为"Setup Node"，
+        uses: actions/setup-node@v3 # 使用actions/setup-node@v3设置Node环境
         with:
-          node-version: 18
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - uses: pnpm/action-setup@v2
+          node-version: 18 # 指定Node版本为18
+      - name: Setup Pages # 给这一步命名为"Setup Pages"
+        uses: actions/configure-pages@v3 # 使用actions/configure-pages@v3以进行页面设置
+      - uses: pnpm/action-setup@v2 # 使用pnpm/action-setup@v2来设置pnpm环境，提供特定的pnpm版本
         with:
-          version: 8
-      - name: Install dependencies
-        run: pnpm install # or pnpm install / yarn install / bun install
-      - name: Build with VitePress
-        run: |
+          version: 8 # 指定了pnpm版本为8
+      - name: Install dependencies # 给这一步命名为"Install dependencies"
+        run: pnpm install # 运行pnpm install命令来安装依赖
+      - name: Build with VitePress # 给这一步命名为"Build with VitePress"
+        run:
+          | # 运行以下命令来构建VitePress项目：先使用pnpm build:docs命令构建项目，然后使用touch命令创建.nojekyll文件
           pnpm build:docs
           touch docs/.vitepress/dist/.nojekyll
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload artifact # 给这一步命名为"Upload artifact"
+        uses: actions/upload-pages-artifact@v2 # 使用actions/upload-pages-artifact@v2来上传项目构建结果作为artifact
         with:
-          path: docs/.vitepress/dist
+          path: docs/.vitepress/dist # 指定了要上传的路径为docs/.vitepress/dist
 
   # Deployment job
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
-    name: Deploy
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+    environment: # 指定了部署环境的名称和URL
+      name: github-pages # 部署环境的名称为github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # URL是从部署步骤的输出中获取的
+    needs: build # 指定了部署工作依赖于构建工作
+    runs-on: ubuntu-latest # 指定了这个工作将在最新的Ubuntu环境上运行
+    name: Deploy # 工作的名称为Deploy
+    steps: # 步骤列表，定义了部署工作中每个步骤的操作
+      - name: Deploy to GitHub Pages # 给这一步命名为"Deploy to GitHub Pages"
+        id: deployment # 为这一步指定了一个ID为deployment
+        uses: actions/deploy-pages@v2 # 使用actions/deploy-pages@v2来部署到GitHub Pages
